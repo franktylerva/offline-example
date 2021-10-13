@@ -1,16 +1,14 @@
 import React, {useState} from 'react';
 import { Grid, Fab } from '@mui/material';
 import { TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper } from '@mui/material';
-
 import { makeStyles } from '@mui/styles';
-
 import AddIcon from '@mui/icons-material/Add';
 import IconButton from '@mui/material/IconButton';
-
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-
 import DessertDrawer from './DessertDrawer';
+import { useAllDocs } from 'use-pouchdb';
+import { usePouch } from 'use-pouchdb';
 
 const useStyles = makeStyles({
     table: {
@@ -25,8 +23,13 @@ const useStyles = makeStyles({
 
 export default function DessertList(props) {
 
+    const db = usePouch()
     const classes = useStyles();
     const [open, setOpen] = useState(false);
+
+    const { rows: desserts } = useAllDocs({
+        include_docs: true, // Load all document bodies
+    })
 
     const handleDrawerOpen = () => {
       setOpen(true)  
@@ -35,6 +38,16 @@ export default function DessertList(props) {
     const handleDrawerClose = () => {
         setOpen(false)  
     }
+
+    const handleSave = async (dessert) => {
+        if(dessert._id) {
+            await db.put(dessert);
+        }
+        else {
+            await db.post(dessert);
+        }
+        setOpen(false)
+    };
 
     const handleEdit = async (id) => {
 
@@ -49,7 +62,7 @@ export default function DessertList(props) {
             <Grid item xs={12} className={classes.headerBar}>
                 <Fab size="small" color="primary" aria-label="add">
                   <AddIcon color="white" onClick={handleDrawerOpen}/>
-                  <DessertDrawer open={open} onClose={handleDrawerClose}/>
+                  <DessertDrawer open={open} handleSave={handleSave} onClose={handleDrawerClose}/>
                 </Fab>
             </Grid>
             <Grid>
@@ -66,7 +79,7 @@ export default function DessertList(props) {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {props.data.map((row) => (
+                            {desserts.map((row) => (
                             <TableRow key={row.doc._id}>
                                 <TableCell component="th" scope="row">
                                     {row.doc.name}

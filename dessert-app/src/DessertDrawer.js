@@ -23,14 +23,12 @@ const DessertDrawer = (props) => {
 
     const classes = useStyles();
 
-    const dessert = {name: "name", calories: 1, fat: 1, carbs: 1};
+    const initialDessert = {name: '', calories: 0, fat: 0, carbs: 0, protein: 0} 
+    const [dessert, setDessert] = useState(initialDessert)
 
     const handleInputChange = (event) => {
-        
-    }
-    
-    const saveDessert = async () => {
-    
+        const { name, value } = event.target
+        setDessert({ ...dessert, [name]: value })
     }
 
     return (
@@ -91,7 +89,7 @@ const DessertDrawer = (props) => {
                     <Button onClick={props.onClose} color="primary">
                         Cancel
                     </Button>
-                    <Button onClick={saveDessert} color="primary">
+                    <Button onClick={() => props.handleSave(dessert)} color="primary">
                         Save
                     </Button>
                 </Grid>
