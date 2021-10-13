@@ -2,10 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import PouchDB from 'pouchdb-browser';
+import { Provider } from 'use-pouchdb';
+
+const db = new PouchDB('desserts');
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider pouchdb={db}>
+      <App />
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
