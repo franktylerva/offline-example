@@ -54,7 +54,7 @@ export default function DessertList(props) {
     };
 
     const handleDelete = async (id,rev) => {
-    
+        await db.put({"_deleted": true, "_id": id, "_rev": rev});
     }
 
     return (
@@ -90,7 +90,7 @@ export default function DessertList(props) {
                                 <TableCell align="right">{row.doc.protein}</TableCell>
                                 <TableCell align="right" width={88}>
                                     <IconButton onClick={() => handleDelete(row.doc._id,row.doc._rev)}>
-                                        <DeleteIcon fontSize="small" color="secondary"/>
+                                        <DeleteIcon fontSize="small" onClick={() => handleDelete(row.doc._id,row.doc._rev)} color="secondary"/>
                                     </IconButton>
                                     <IconButton onClick={() => handleEdit(row.doc._id)}>
                                         <EditIcon fontSize="small" color="primary"/>
