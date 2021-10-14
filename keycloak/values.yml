@@ -1,0 +1,23 @@
+service:
+  type: ClusterIP
+
+ingress:
+  enabled: true
+  hostname: id-api.local
+
+auth:
+  createAdminUser: true
+  adminUser: admin
+  adminPassword: password
+
+# extraVolumes: |
+#   - name: realm-volume
+#     configMap:
+#       name: realm-script
+
+# extraVolumeMounts: |
+#   - name: realm-volume
+#     mountPath: /realm
+
+# extraStartupArgs: "-Dkeycloak.import=/realm/realm-export.json -Dkeycloak.profile.feature.upload_scripts=enabled"
+
