@@ -7,6 +7,15 @@ import { Provider } from 'use-pouchdb';
 
 const db = new PouchDB('desserts');
 
+const remoteDatabase = new PouchDB("http://localhost:5984/desserts");
+
+PouchDB.sync(db, remoteDatabase, {
+  live: true,
+  heartbeat: false,
+  timeout: false,
+  retry: true
+});
+
 ReactDOM.render(
   <React.StrictMode>
     <Provider pouchdb={db}>
