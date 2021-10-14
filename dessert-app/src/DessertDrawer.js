@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { Drawer, Grid, TextField, Button } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
@@ -22,9 +22,13 @@ const useStyles = makeStyles({
 const DessertDrawer = (props) => {
 
     const classes = useStyles();
+    const [dessert, setDessert] = useState(props.currentDessert)
 
-    const initialDessert = {name: '', calories: 0, fat: 0, carbs: 0, protein: 0} 
-    const [dessert, setDessert] = useState(initialDessert)
+    useEffect(() => {
+        if(props.currentDessert) {
+          setDessert(props.currentDessert);
+        }
+    },[props.currentDessert])
 
     const handleInputChange = (event) => {
         const { name, value } = event.target

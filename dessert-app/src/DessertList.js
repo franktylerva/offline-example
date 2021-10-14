@@ -26,6 +26,9 @@ export default function DessertList(props) {
     const db = usePouch()
     const classes = useStyles();
     const [open, setOpen] = useState(false);
+    
+    const defaultDessert = { name: '', calories: 0, fat: 0, carbs: 0, protein: 0 };
+    const [currentDessert,setCurrentDessert] = useState(defaultDessert);
 
     const { rows: desserts } = useAllDocs({
         include_docs: true, // Load all document bodies
@@ -36,6 +39,7 @@ export default function DessertList(props) {
     };
 
     const handleDrawerClose = () => {
+        setCurrentDessert(defaultDessert);
         setOpen(false)  
     }
 
@@ -51,6 +55,17 @@ export default function DessertList(props) {
 
     const handleEdit = async (id) => {
 
+        setCurrentDessert(null)
+        try {
+          const doc = await db.get(id, {
+            revs_info: true
+          });
+          setCurrentDessert(doc);
+          setOpen(true);
+        }
+        catch(err) {
+          console.log(err);
+        }
     };
 
     const handleDelete = async (id,rev) => {
@@ -62,7 +77,7 @@ export default function DessertList(props) {
             <Grid item xs={12} className={classes.headerBar}>
                 <Fab size="small" color="primary" aria-label="add">
                   <AddIcon color="white" onClick={handleDrawerOpen}/>
-                  <DessertDrawer open={open} handleSave={handleSave} onClose={handleDrawerClose}/>
+                  <DessertDrawer open={open} currentDessert={currentDessert} handleSave={handleSave} onClose={handleDrawerClose}/>
                 </Fab>
             </Grid>
             <Grid>
@@ -90,7 +105,7 @@ export default function DessertList(props) {
                                 <TableCell align="right">{row.doc.protein}</TableCell>
                                 <TableCell align="right" width={88}>
                                     <IconButton onClick={() => handleDelete(row.doc._id,row.doc._rev)}>
-                                        <DeleteIcon fontSize="small" onClick={() => handleDelete(row.doc._id,row.doc._rev)} color="secondary"/>
+                                        <DeleteIcon fontSize="small" color="secondary"/>
                                     </IconButton>
                                     <IconButton onClick={() => handleEdit(row.doc._id)}>
                                         <EditIcon fontSize="small" color="primary"/>
