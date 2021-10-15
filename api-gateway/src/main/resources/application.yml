@@ -1,0 +1,46 @@
+authDomain: http://localhost:8081/auth/realms/CouchDB
+
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          api-gateway:
+            authorization-grant-type: authorization_code
+            client-id: api-gateway
+            client-secret: 5b168a5a-8afe-493d-a581-fc627760cb45
+            scope:
+              - openid
+              - profile
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+        provider: 
+          api-gateway:
+            userNameAttribute: preferred_username
+            issuer-uri: ${authDomain}
+
+
+  cloud:
+    gateway:
+      default-filters:
+        - AddRequestHeader=Access-Control-Allow-Origin, *
+        - StripPrefix=1
+      routes:
+        - id: couchdb
+          uri: http://couchdb:5984
+          predicates:
+            - Path=/couchdb/**
+          filters:
+            - AddCouchDBAuthHeaders=92de07df7e7a3fe14808cef90a7cc0d91
+            - SetUserCookie
+        - id: app
+          uri: http://data-app
+          predicates:
+            - Path=/app/**
+          filters:
+            - AddCouchDBAuthHeaders=92de07df7e7a3fe14808cef90a7cc0d91
+            - SetUserCookie
+
+logging:
+  level:
+    root: ERROR
+    com.example.apigateway: DEBUG
