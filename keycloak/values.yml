@@ -3,7 +3,7 @@ service:
 
 ingress:
   enabled: true
-  hostname: id-api.local
+  hostname: keycloak
 
 auth:
   createAdminUser: true

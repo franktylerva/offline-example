@@ -8,7 +8,7 @@ spring:
           api-gateway:
             authorization-grant-type: authorization_code
             client-id: api-gateway
-            client-secret: 5b168a5a-8afe-493d-a581-fc627760cb45
+            client-secret: 53cba4eb-b679-413b-bdda-81d0269416a2
             scope:
               - openid
               - profile
