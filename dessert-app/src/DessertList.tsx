@@ -6,9 +6,8 @@ import AddIcon from '@mui/icons-material/Add';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import DessertDrawer from './DessertDrawer';
-import { useAllDocs } from 'use-pouchdb';
-import { usePouch } from 'use-pouchdb';
+import DessertDrawer, {Dessert} from './DessertDrawer';
+import { useAllDocs, usePouch } from 'use-pouchdb';
 
 const useStyles = makeStyles({
     table: {
@@ -18,18 +17,26 @@ const useStyles = makeStyles({
         textAlign: 'right',
         marginTop: 10,
         marginBottom: 20
+    },
+    addButton: {
+        color: 'white'
     }
   });
 
-export default function DessertList(props) {
+interface Props {
+
+}
+
+
+export default function DessertList(props: Props) {
 
     const db = usePouch()
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     
-    const defaultDessert = { name: '', calories: 0, fat: 0, carbs: 0, protein: 0 };
+    const defaultDessert: Dessert = { name: '', calories: 0, fat: 0, carbs: 0, protein: 0 };
     const [currentDessert,setCurrentDessert] = useState(defaultDessert);
-
+    
     const { rows: desserts } = useAllDocs({
         include_docs: true, // Load all document bodies
     })
@@ -43,7 +50,7 @@ export default function DessertList(props) {
         setOpen(false)  
     }
 
-    const handleSave = async (dessert) => {
+    const handleSave = async (dessert: Dessert) => {
         if(dessert._id) {
             await db.put(dessert);
         }
@@ -53,11 +60,11 @@ export default function DessertList(props) {
         setOpen(false)
     };
 
-    const handleEdit = async (id) => {
+    const handleEdit = async (id: string) => {
 
-        setCurrentDessert(null)
+        //setCurrentDessert(null)
         try {
-          const doc = await db.get(id, {
+          const doc: any = await db.get(id, {
             revs_info: true
           });
           setCurrentDessert(doc);
@@ -68,7 +75,7 @@ export default function DessertList(props) {
         }
     };
 
-    const handleDelete = async (id,rev) => {
+    const handleDelete = async (id: string,rev: string) => {
         await db.put({"_deleted": true, "_id": id, "_rev": rev});
     }
 
@@ -76,7 +83,7 @@ export default function DessertList(props) {
         <Grid>
             <Grid item xs={12} className={classes.headerBar}>
                 <Fab size="small" color="primary" aria-label="add">
-                  <AddIcon color="white" onClick={handleDrawerOpen}/>
+                  <AddIcon className={classes.addButton} onClick={handleDrawerOpen}/>
                   <DessertDrawer open={open} currentDessert={currentDessert} handleSave={handleSave} onClose={handleDrawerClose}/>
                 </Fab>
             </Grid>
@@ -94,7 +101,7 @@ export default function DessertList(props) {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {desserts.map((row) => (
+                            {desserts.map((row: any) => (
                             <TableRow key={row.doc._id}>
                                 <TableCell component="th" scope="row">
                                     {row.doc.name}

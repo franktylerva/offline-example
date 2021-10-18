@@ -19,7 +19,23 @@ const useStyles = makeStyles({
     }
 });
 
-const DessertDrawer = (props) => {
+interface Props {
+    currentDessert: Dessert,
+    onClose: () => void,
+    handleSave: (a: Dessert) => void,
+    open: boolean
+}
+
+export interface Dessert {
+    name: string,
+    calories: number,
+    fat: number,
+    carbs: number,
+    protein: number,
+    [key: string]: any
+}
+
+const DessertDrawer = (props: Props) => {
 
     const classes = useStyles();
     const [dessert, setDessert] = useState(props.currentDessert)
@@ -30,8 +46,8 @@ const DessertDrawer = (props) => {
         }
     },[props.currentDessert])
 
-    const handleInputChange = (event) => {
-        const { name, value } = event.target
+    const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+        const { name, value } = e.currentTarget
         setDessert({ ...dessert, [name]: value })
     }
 

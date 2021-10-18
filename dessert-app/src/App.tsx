@@ -1,11 +1,11 @@
 import React from 'react';
 import { Grid } from '@mui/material';
-import Header from "./Header"
+import Header, {User} from "./Header"
 import DessertList from "./DessertList"
 
 function App() {
 
-  const user = {name: "Test"}
+  const user: User = {name: "Test"}
 
   return (
     <Grid container direction="column">

@@ -8,7 +8,15 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-const Header = (props) => {
+interface Props {
+    user: User
+}
+
+export interface User {
+    name: string
+}
+
+const Header = (props: Props) => {
     const classes = useStyles();
     return <AppBar position="static">
         <Toolbar>
